@@ -1,0 +1,8 @@
+Objects Data Set (Vehicles + Animals):
+https://www.kaggle.com/c/deeplearningclassificationtask/data
+
+Human Faces Data Set:
+susanqq.github.io/UTKFace/
+
+Celebrity Data Set:
+https://www.kaggle.com/datasets/dansbecker/5-celebrity-faces-dataset

@@ -1,0 +1,68 @@
+mogrify -format jpg *.bmp
+DEL *.bmp
+mogrify -resize 200x200 *.jpg
+
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import plotly.graph_objs as go
+import plotly.figure_factory as ff
+from plotly import tools
+
+# Dataset size before augmentation
+print('Dataset size before augmentation')
+print(X.shape)
+print(y.shape)
+
+# Data Augmentation Configuration
+datagen = ImageDataGenerator(rescale=1/255,
+    rotation_range=40,
+    horizontal_flip=True,
+    vertical_flip=True,
+    fill_mode='nearest')
+
+def image_augmentation(image, number_of_augmentations):
+    augmentated_images = []
+    image = image.reshape(1, 200, 200, 3)
+    augmentation_count = 0
+    for x_batch in datagen.flow(image, batch_size=1, save_to_dir="all_celebs"):
+        augmentated_images.append(x_batch)
+        augmentation_count += 1
+        if augmentation_count >= number_of_augmentations:
+            break
+    return augmentated_images
+
+aug_X = []
+aug_y = []
+for x, y1 in zip(X, y):
+    aug_images = image_augmentation(x, 150)
+    for new_image in aug_images:
+        aug_X.append(new_image.reshape(200, 200, 3))
+        aug_y.append(y1)
+
+# Merge augmented and original images
+aug_X_train = np.concatenate((X, aug_X), axis=0)
+aug_y_train = np.concatenate((y, aug_y), axis=0)
+
+# Dataset size after augmentation
+print('Dataset size after augmentation')
+print(aug_X_train.shape)
+print(aug_y_train.shape)
+
+folder = "UTKFace"
+for count, filename in enumerate(os.listdir(folder)):
+    name = filename.split(“.”)
+    dst = f"{name[0]}.threat"
+    src =f"{folder}/{filename}"
+    dst =f"{folder}/{dst}"
+    os.rename(src, dst)
+
+numbers = [for i in range(13880)]
+random.shuffle(numbers)
+folder = “combined”
+index = 0
+for count, filename in enumerate(os.listdir(folder)):
+    filetype = filename.split(".")
+    dst = f"{nums[index]}.{filetype[1]}"
+    src = f"{folder}/{filename}"
+    dst = f"{folder}/{dst}"
+    index += 1
+    os.rename(src, dst)
